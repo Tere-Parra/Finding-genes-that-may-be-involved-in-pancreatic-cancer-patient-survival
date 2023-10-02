@@ -291,7 +291,7 @@ emapplot(gse, showCategory = 10)
 
 #(see the code attached for more)
 ```
-
+![](GO_Terms.png)
 
 REFERENCES
 
