@@ -196,6 +196,32 @@ save(DEG, dataDEGs, file="DEG.RData")
 summary(DEG)
 
 ``` 
+Let's see the DEG results with the volcano plot and the heatmap 
+
+``` R
+######################   Volcano plot and heatmap ##############
+
+### A Basic volcano plot
+par(mfrow=c(1,1))
+
+# volcano plot
+with(DEG, plot(logFC, -log10(PValue), pch=20, main="Volcano plot", xlim=c(-7,7)))
+
+#We select these values, but it is important to adjust these values according to your data and perform an analysis of the values #beforehand.
+
+# blue padj<0.1, red si log2FC>1 y padj<0.1)
+with(subset(DEG, PValue<0.05 ), points(logFC, -log10(PValue), pch=20, col="blue"))
+with(subset(DEG, PValue<0.05 & abs(logFC)>2), 
+     points(logFC, -log10(PValue), pch=20, col="red"))
+  
+#heatmap
+pheatmap(DEG, main="Heatmap", color = heat.colors, cluster_rows = T,
+         show_rownames=F, border_color=NA, scale="row",
+         fontsize_row = 8, fontsize_col = 12, angle_col = "45")
+
+```
+
+
 
 REFERENCES
 
