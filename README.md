@@ -11,7 +11,7 @@ About the project
 
 Here, I use the TCGA-PADD project. This project has 185 cases with 19,556 genes. We have different metadata available. We are going to focus only on dead and live patients. We are conducting a Differential Expression Analysis of pancreatic cancer to find differential dead and live genes.
 
-** 1. Downloading data **
+**1. Downloading data**
    
 TCGA-bio links have their codes and structure. Here, I combined edgeR and limma to perform a DEG analysis.
 We downloaded the data with query.raw. 
@@ -42,6 +42,7 @@ SKCM.counts <- GDCprepare(query = query.raw,
 
 #Detele it from the RAM 
 rm(query.raw)
+ ```
 
 Next, we create the count's data frame with the assay() function. 
 
@@ -57,9 +58,50 @@ save(data2, SKCM.counts, file="conteos.RData")
 
  ```
 
-** 2. Pre-process **
+**2. Pre-process**
+
+In these steps, we eliminate outliers and perform the data normalization.  
+
+First, we use the TCGAanalyze_Preprocessing() function to find outliers. Then, with the TCGAanalyze_Normalization() normalized the data (samples) and observed the different distribution with boxplots. Finally, TCGAanalyze_Filtering() filter genes, and with tmm() we applied the TMM normalization.
+
+We use TMM normalization. 
+
+``` R
+
+# 
+# 1- Function TCGAanalyze_Preprocessing
+dataPrep<-TCGAanalyze_Preprocessing(object=SKCM.counts,
+                                    cor.cut = 0.6
+                                    )
+
+#No outliers !! 
+
+# 2- Function TCGAanalyze_Normalization
+dataNorm<-TCGAanalyze_Normalization(tabDF=data2,
+                                    geneInfo = TCGAbiolinks::geneInfoHT,
+                                    method="gcContent")
 
 
+#Revisamos que todo vaya bien con la normalizacion y metodo
+
+boxplot(dataPrep, outline = FALSE)
+boxplot(dataNorm, outline = FALSE)
+
+# 3- Function TCGAanalyze_Filtering 
+
+dataFilt<-TCGAanalyze_Filtering(tabDF=dataNorm,
+                                method="quantile", 
+                                qnt.cut = 0.25)
+
+# 4- Normalized Method -- >  TMM
+dataTMMnorm<- tmm(dataFilt)
+
+#We save the normalized data frame 
+write.table(dataTMMnorm, "Tabla_Normalizada.csv")
+
+#Save the project
+save(dataPrep, dataNorm, dataFilt, dataTMMnorm, file="Preprocesamiento.RData")
+``` 
 
 REFERENCES
 
