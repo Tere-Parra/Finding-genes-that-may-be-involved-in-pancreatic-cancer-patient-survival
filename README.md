@@ -3,13 +3,14 @@ The Genomic Data Commons (GDC) is a portal that contains a lot of projects relat
 
 The R program has a library named "TCGA_biolinks" with free access to GDC data. 
 
+### About the project
+
+Here, I use the TCGA-PADD project. This project has 185 cases with 19,556 genes. We have different metadata available. We are going to focus only on dead and live patients. We are conducting a Differential Expression Analysis of pancreatic cancer to find differential dead and live genes.
+
 First, I introduced the project (ductal pancreatic cancer subtype) and downloaded the data to create a counts data frame that we will use for the Differential Analysis Expression. Then, I perform an Enrichment Analysis over the principal DEG genes.
 
 ## Methods 
 
-About the project
-
-Here, I use the TCGA-PADD project. This project has 185 cases with 19,556 genes. We have different metadata available. We are going to focus only on dead and live patients. We are conducting a Differential Expression Analysis of pancreatic cancer to find differential dead and live genes.
 
 **1. Downloading data**
    
