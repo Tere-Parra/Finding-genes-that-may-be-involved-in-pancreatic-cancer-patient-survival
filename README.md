@@ -137,6 +137,8 @@ fviz_pca_ind(pca,
 )
  
 ```
+![](PCA_After_Normalization_genes.png)
+
 
 **4.DEG**
 
@@ -224,7 +226,7 @@ pheatmap(DEG, main="Heatmap", color = heat.colors, cluster_rows = T,
          fontsize_row = 8, fontsize_col = 12, angle_col = "45")
 
 ```
-
+![](Volcano_Plot2.png)
 
 
 REFERENCES
