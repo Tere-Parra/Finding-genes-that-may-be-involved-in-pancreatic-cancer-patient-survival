@@ -134,6 +134,68 @@ fviz_pca_ind(pca,
  
 ```
 
+**4.DEG**
+
+First, we need to verify the available metadata. then, we choose the Dead and Alive projects. 
+
+``` R
+
+#1 We see the metadata 
+sample.info<-colData(SKCM.counts)
+print(sample.info)
+head(sample.info)
+
+#We need the Dead and Alive patients. 
+TMdata<-dataTMMnorm[,which(sample.info@listData[["paper_Follow up vital status"]]=="Dead")]
+
+PSTdata<-dataTMMnorm[,which(sample.info@listData[["paper_Follow up vital status"]]=="Alive")]
+
+#Save the R session
+save(TMdata, PSTdata, file="Conditions.RData")
+
+```
+Now we have the samples and we can perform the DEG with the condition (DEAD over ALIVE patients). The function is TCGAanalyze_DEA()
+
+``` R
+load("Conditions.RData")
+
+#Perform DEG
+dataDEGs <- TCGAanalyze_DEA(mat1 = TMdata,
+                            mat2 = PSTdata,
+                            Cond1type = "Dead",
+                            Cond2type = "Alive",
+                            fdr.cut = 0.01 ,  #False Discovery Rate
+                            logFC.cut = 1,   #Fold Change
+                            method = "glmLRT") 
+
+
+# 79 samples in Cond1type Dead
+# 71 samples in Cond2type Alive
+# 45,362 features as miRNA or genes
+
+summary(dataDEGs)
+
+``` 
+
+By defect, we have miRNA, mRNA, and other transcriptomic data. We are going to separate the protein-coding genes because we want to perform an enrichment analysis.
+
+``` R
+#Coding genes
+DEG <- filter(dataDEGs, gene_type=="protein_coding")
+#861 coding genes 
+
+#save the data frames
+write.table(dataDEGs, "Genes_Diferenciados_TCGA.csv",
+            row.names=T)
+write.table(DEG, "Genes_Dif_ProteinCoding.csv",
+            row.names=T)
+
+#save the session
+save(DEG, dataDEGs, file="DEG.RData")
+
+summary(DEG)
+
+``` 
 
 REFERENCES
 
