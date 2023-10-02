@@ -101,7 +101,38 @@ write.table(dataTMMnorm, "Tabla_Normalizada.csv")
 
 #Save the project
 save(dataPrep, dataNorm, dataFilt, dataTMMnorm, file="Preprocesamiento.RData")
-``` 
+```
+
+
+
+**3. Expression analysis**
+
+We are going to see the effects of the normalization with the PCA graph. 
+
+``` R
+
+# We take the first 1500 genes.
+varianza <-apply(dataTMMnorm, 1, var)
+varianza <-sort(varianza, decreasing=TRUE) #decreasing a TRUE to pick up the more variant genes
+milquinientosgenes <-varianza[1:1500]
+genes <-names(milquinientosgenes)
+milquinientosgenesdata <-dataTMMnorm[genes,]
+
+# PCA
+library(factoextra)
+pca <- prcomp(milquinientosgenesdata[1:50,1:20])
+fviz_eig(pca)
+
+#Genes distribution
+library(scales)
+fviz_pca_ind(pca,
+             col.ind = "cos2", # Color by the quality of representation
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+             repel = TRUE     # Avoid text overlapping
+)
+ 
+```
+
 
 REFERENCES
 
