@@ -3,7 +3,7 @@ The Genomic Data Commons (GDC) is a portal that contains a lot of projects relat
 
 First, I introduced the project (ductal pancreatic cancer subtype) and downloaded the data to create a counts data frame that we will use for the Differential Analysis Expression. Then I perform an Enrichment Analysis over the principal DEG genes.
 
-##Methods 
+## Methods 
 
 1. About the project
 Here we use the TCGA-PADD project. This project has 185 cases with 19,556 genes. We have different metadata available, but we focus only on dead and live cases. For that reason, we are conducting a Differential Expression Analysis of pancreatic cancer to find differential dead and live genes.
