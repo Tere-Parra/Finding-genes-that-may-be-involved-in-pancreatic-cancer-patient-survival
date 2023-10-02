@@ -229,6 +229,70 @@ pheatmap(DEG, main="Heatmap", color = heat.colors, cluster_rows = T,
 ![](Volcano_Plot2.png)
 
 
+
+## Enrichment Analysis 
+
+Now, we will perform an Enrichment Analysis. First and foremost, we will make the GO function and graphs 
+
+``` R
+
+#Libraries
+library(clusterProfiler)
+library(org.Hs.eg.db)
+library (DOSE)
+library(GSEABase)
+library(pathview)
+library(enrichplot)
+library(ggridges)
+
+# We need to select the LogFC genes 
+original_gene_list <- DegGenes$logFC
+
+# Now, the genes list
+names(original_gene_list) <- DegGenes$gene_name
+
+# We omit NA values 
+gene_list<-na.omit(original_gene_list)
+
+# We sort the list in descending order (requirement of the clusterProfiler package)
+gene_list = sort(gene_list, decreasing = TRUE)
+print(gene_list)
+
+#3. Let's make the GSEA 
+
+#Humans package
+keytypes(org.Hs.eg.db)
+
+# GSEA Parameters
+gse <- gseGO(geneList=gene_list, 
+             ont ="ALL", #We want CC, FM, MM 
+             keyType = "SYMBOL", #ID type of the Genes
+             nPerm = 10000, #Permutation number
+             minGSSize = 3, #Minimium genes 
+             maxGSSize = 200, #Max number of genes
+             pvalueCutoff = 0.05, #Cut 
+             verbose = TRUE, #Print the process
+             OrgDb = "org.Hs.eg.db", #Organism
+             pAdjustMethod = "none") #Ajust method
+
+#283 GO Terms
+
+#Save the results
+enrichment <- as.data.frame(gse)
+write.table(enrichment, "tabla_enriquecimiento.csv")
+
+
+#4. We built graphics
+
+head(gse)
+
+#Enrich Map
+emapplot(gse, showCategory = 10)
+
+#(see the code attached for more)
+```
+
+
 REFERENCES
 
 Colaprico, Antonio, et al. “TCGAbiolinks: an R/Bioconductor package for integrative analysis of TCGA data.” Nucleic acids research 44.8 (2015): e71-e71.
