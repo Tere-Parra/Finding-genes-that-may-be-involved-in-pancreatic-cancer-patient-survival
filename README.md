@@ -104,9 +104,10 @@ write.table(dataTMMnorm, "Tabla_Normalizada.csv")
 #Save the project
 save(dataPrep, dataNorm, dataFilt, dataTMMnorm, file="Preprocesamiento.RData")
 ```
-`![](Antes_Norm.png)`.
 
-`![](After_Norm.png)`.
+![Before Normalization](Antes_Norm.png)
+
+![After Normalization](After_Norm.png)
 
 
 **3. Expression analysis**
