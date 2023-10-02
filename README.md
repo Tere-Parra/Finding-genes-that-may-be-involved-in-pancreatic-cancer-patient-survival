@@ -11,12 +11,13 @@ About the project
 
 Here, I use the TCGA-PADD project. This project has 185 cases with 19,556 genes. We have different metadata available. We are going to focus only on dead and live patients. We are conducting a Differential Expression Analysis of pancreatic cancer to find differential dead and live genes.
 
-1. Downloading data
+** 1. Downloading data **
    
 TCGA-bio links have their codes and structure. Here, I combined edgeR and limma to perform a DEG analysis.
 We downloaded the data with query.raw. 
 
-The function query.raw has different options as data.category, data.type, and workflow.  We choose "Transcriptome Profiling", but this project has "Simple Nucleotide Variation", "mi RNA profile", and more. To consult the available data: ([https://portal.gdc.cancer.gov/projects/TCGA-PAAD]) 
+The function query.raw has different options as data.category, data.type, and worflow.type (counts data).  We choose "Transcriptome Profiling", but this project has different data.category such as: "Simple Nucleotide Variation", "mi RNA profile", and more. To consult the available data: ([https://portal.gdc.cancer.gov/projects/TCGA-PAAD]) . Data.Type is the quantification form. workflow.type has the available software counts data. 
+
 
  ``` R
 #Project Name
@@ -42,9 +43,21 @@ SKCM.counts <- GDCprepare(query = query.raw,
 #Detele it from the RAM 
 rm(query.raw)
 
+Next, we create the count's data frame with the assay() function. 
+
+ ``` R
+# We generate the Expression Matrix (TPM counts)
+data2<-assay(SKCM.counts)
+
+#save the data frame
+write.table(data2, "conteos_TCGA.csv")
+
+#Save the R data session
+save(data2, SKCM.counts, file="conteos.RData")
+
  ```
 
-
+** 2. Pre-process **
 
 
 
