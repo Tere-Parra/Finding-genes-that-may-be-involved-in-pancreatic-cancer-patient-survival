@@ -296,7 +296,7 @@ emapplot(gse, showCategory = 10)
 
 ## Acknowledgment
 
-Tere Parra (2022).  GitHub. https://github.com/pandas-dev/pandas
+Tere Parra (2022).  GitHub. [https://github.com/Tere-Parra/Finding-genes-that-may-be-involved-in-pancreatic-cancer-patient-survival.git]
 
 ## REFERENCES
 
