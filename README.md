@@ -260,8 +260,7 @@ write.table(enrichment, "tabla_enriquecimiento.csv")
 
 head(gse)
 
-#Enrich Map
-emapplot(gse, showCategory = 10)
+dotplot(gse, showCategory=10, split=".sign") + facet_grid(.~.sign)
 
 #(see the code attached for more)
 
