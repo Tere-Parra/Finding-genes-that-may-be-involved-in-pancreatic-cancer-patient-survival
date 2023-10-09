@@ -325,6 +325,9 @@ dotplot(kk2, showCategory = 10, title = "Enriched Pathways" , split=".sign") +
 
 ```
 
+![KEGG](KEGG_Plot.png)
+
+
 ## Acknowledgment
 
 Tere Parra (2022).  GitHub. [https://github.com/Tere-Parra/Finding-genes-that-may-be-involved-in-pancreatic-cancer-patient-survival.git]
