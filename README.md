@@ -293,7 +293,12 @@ emapplot(gse, showCategory = 10)
 ```
 ![](GO_Terms.png)
 
-REFERENCES
+
+## Acknowledgment
+
+Tere Parra (2022).  GitHub. https://github.com/pandas-dev/pandas
+
+## REFERENCES
 
 Colaprico, Antonio, et al. “TCGAbiolinks: an R/Bioconductor package for integrative analysis of TCGA data.” Nucleic acids research 44.8 (2015): e71-e71.
 
@@ -301,5 +306,9 @@ Silva, Tiago C., et al. “TCGA Workflow: Analyze cancer genomics and epigenomic
 
 Mounir, Mohamed, et al. “New functionalities in the TCGAbiolinks package for the study and integration of cancer data from GDC and GTEx.” PLoS computational biology 15.3 (2019): e1006701. (https://doi.org/10.1371/journal.pcbi.1006701)
 Other useful links
+
+Carmona Pedo & Cano Carlos, Analisis bioinformatico para un problems de ómicas. Google Colaboratory. (2019). Google.com. https://colab.research.google.com/drive/1sgkBRHqzUOxUHh4j_li3daHWqyNjEDOk?usp=sharing#scrollTo=Oe0PL76cRV23
+
+‌
 
 
