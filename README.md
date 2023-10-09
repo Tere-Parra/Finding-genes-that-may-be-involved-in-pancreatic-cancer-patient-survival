@@ -105,9 +105,9 @@ write.table(dataTMMnorm, "Tabla_Normalizada.csv")
 save(dataPrep, dataNorm, dataFilt, dataTMMnorm, file="Preprocesamiento.RData")
 ```
 
-![Before Normalization](Antes_Norm.png)
+![Before Normalization](antes_rawData.png)
 
-![After Normalization](After_Norm.png)
+![After Normalization](Despues.png)
 
 
 **3.DEG**
