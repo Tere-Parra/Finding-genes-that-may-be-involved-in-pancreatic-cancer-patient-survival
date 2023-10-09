@@ -86,8 +86,8 @@ dataNorm<-TCGAanalyze_Normalization(tabDF=data2,
 
 #Revisamos que todo vaya bien con la normalizacion y metodo
 
-boxplot(dataPrep, outline = FALSE)
-boxplot(dataNorm, outline = FALSE)
+boxplot(data2[,1:50], outline=FALSE, main="Antes de la normalización", xaxt="n")
+boxplot(dataTMMnorm[,1:50], outline=FALSE, main="Después de la normalización", xaxt="n")
 
 # 3- Function TCGAanalyze_Filtering 
 
@@ -110,37 +110,7 @@ save(dataPrep, dataNorm, dataFilt, dataTMMnorm, file="Preprocesamiento.RData")
 ![After Normalization](After_Norm.png)
 
 
-**3. Expression analysis**
-
-We are going to see the effects of the normalization with the PCA graph. 
-
-``` R
-
-# We take the first 1500 genes.
-varianza <-apply(dataTMMnorm, 1, var)
-varianza <-sort(varianza, decreasing=TRUE) #decreasing a TRUE to pick up the more variant genes
-milquinientosgenes <-varianza[1:1500]
-genes <-names(milquinientosgenes)
-milquinientosgenesdata <-dataTMMnorm[genes,]
-
-# PCA
-library(factoextra)
-pca <- prcomp(milquinientosgenesdata[1:50,1:20])
-fviz_eig(pca)
-
-#Genes distribution
-library(scales)
-fviz_pca_ind(pca,
-             col.ind = "cos2", # Color by the quality of representation
-             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
-             repel = TRUE     # Avoid text overlapping
-)
- 
-```
-![](PCA_After_Normalization_genes.png)
-
-
-**4.DEG**
+**3.DEG**
 
 First, we need to verify the available metadata. then, we choose the Dead and Alive projects. 
 
@@ -152,12 +122,12 @@ print(sample.info)
 head(sample.info)
 
 #We need the Dead and Alive patients. 
-TMdata<-dataTMMnorm[,which(sample.info@listData[["paper_Follow up vital status"]]=="Dead")]
+Dead.data <-dataTMMnorm[,which(sample.info@listData[["paper_Follow up vital status"]]=="Dead")]
 
-PSTdata<-dataTMMnorm[,which(sample.info@listData[["paper_Follow up vital status"]]=="Alive")]
+Alive.data <-dataTMMnorm[,which(sample.info@listData[["paper_Follow up vital status"]]=="Alive")]
 
 #Save the R session
-save(TMdata, PSTdata, file="Conditions.RData")
+save(Dead.data, Alive.data, file="Conditions.RData")
 
 ```
 Now we have the samples and we can perform the DEG with the condition (DEAD over ALIVE patients). The function is TCGAanalyze_DEA()
@@ -166,8 +136,8 @@ Now we have the samples and we can perform the DEG with the condition (DEAD over
 load("Conditions.RData")
 
 #Perform DEG
-dataDEGs <- TCGAanalyze_DEA(mat1 = TMdata,
-                            mat2 = PSTdata,
+dataDEGs <- TCGAanalyze_DEA(mat1 = Dead.data,
+                            mat2 = Alive.data,
                             Cond1type = "Dead",
                             Cond2type = "Alive",
                             fdr.cut = 0.01 ,  #False Discovery Rate
@@ -188,9 +158,11 @@ By defect, we have miRNA, mRNA, and other transcriptomic data. We are going to s
 ``` R
 #Coding genes
 DEG <- filter(dataDEGs, gene_type=="protein_coding")
+
 #861 coding genes 
 
 #save the data frames
+
 write.table(dataDEGs, "Genes_Diferenciados_TCGA.csv",
             row.names=T)
 write.table(DEG, "Genes_Dif_ProteinCoding.csv",
@@ -202,7 +174,7 @@ save(DEG, dataDEGs, file="DEG.RData")
 summary(DEG)
 
 ``` 
-Let's see the DEG results with the volcano plot and the heatmap 
+Let's see the DEG results with a volcano plot 
 
 ``` R
 ######################   Volcano plot and heatmap ##############
@@ -220,11 +192,6 @@ with(subset(DEG, PValue<0.05 ), points(logFC, -log10(PValue), pch=20, col="blue"
 with(subset(DEG, PValue<0.05 & abs(logFC)>2), 
      points(logFC, -log10(PValue), pch=20, col="red"))
   
-#heatmap
-pheatmap(DEG, main="Heatmap", color = heat.colors, cluster_rows = T,
-         show_rownames=F, border_color=NA, scale="row",
-         fontsize_row = 8, fontsize_col = 12, angle_col = "45")
-
 ```
 ![](Volcano_Plot2.png)
 
@@ -235,8 +202,12 @@ pheatmap(DEG, main="Heatmap", color = heat.colors, cluster_rows = T,
 Now, we will perform an Enrichment Analysis. First and foremost, we will make the GO function and graphs 
 
 ``` R
+#1. Coding genes
 
-#Libraries
+DegGenes <- dataDEGs[dataDEGs$gene_type == "protein_coding", ]
+
+#libraries
+
 library(clusterProfiler)
 library(org.Hs.eg.db)
 library (DOSE)
@@ -244,6 +215,7 @@ library(GSEABase)
 library(pathview)
 library(enrichplot)
 library(ggridges)
+
 
 # We need to select the LogFC genes 
 original_gene_list <- DegGenes$logFC
@@ -254,7 +226,8 @@ names(original_gene_list) <- DegGenes$gene_name
 # We omit NA values 
 gene_list<-na.omit(original_gene_list)
 
-# We sort the list in descending order (requirement of the clusterProfiler package)
+# We sort the list in descending order (requirement for clusterProfiler package)
+
 gene_list = sort(gene_list, decreasing = TRUE)
 print(gene_list)
 
@@ -278,6 +251,7 @@ gse <- gseGO(geneList=gene_list,
 #283 GO Terms
 
 #Save the results
+
 enrichment <- as.data.frame(gse)
 write.table(enrichment, "tabla_enriquecimiento.csv")
 
@@ -290,9 +264,67 @@ head(gse)
 emapplot(gse, showCategory = 10)
 
 #(see the code attached for more)
+
 ```
 ![](GO_Terms.png)
 
+## KEGG Terms
+
+``` R
+
+
+# KEGG ####
+
+#Convert ID to Entrez
+ids<-bitr(names(original_gene_list), fromType = "SYMBOL", toType = "ENTREZID", 
+          OrgDb="org.Hs.eg.db")
+
+head(gene_list)
+
+#Delete duplicates 
+dedup_ids = ids[!duplicated(ids[c("ENTREZID")]),]
+
+#Data frame 
+df2 = DegGenes[DegGenes$gene_name %in% dedup_ids$SYMBOL,]
+
+# Columns names with ID's 
+colnames(df2)[colnames(df2) == "gene_name"] <- "SYMBOL"
+
+df2 <- merge(dedup_ids, df2, by="SYMBOL")
+
+# Choose fold change
+kegg_gene_list <- df2$logFC
+
+#Name KEGG with IDs
+names(kegg_gene_list) <- df2$ENTREZID
+
+#Omit NA values
+kegg_gene_list<-na.omit(kegg_gene_list)
+
+#Sort genes 
+kegg_gene_list = sort(kegg_gene_list, decreasing = TRUE)
+
+print(kegg_gene_list)
+
+### KEGG Analysis 
+kk2 <- gseKEGG(geneList     = kegg_gene_list,
+               organism     = "hsa",
+               nPerm        = 10000,
+               minGSSize    = 3,
+               maxGSSize    = 800,
+               pvalueCutoff = 0.05,
+               pAdjustMethod = "none",
+               keyType       = "ncbi-geneid")
+
+KEGG <- as.data.frame(kk2)
+
+write.table(KEGG, "KEGG_Table.csv")
+
+#Graphic
+dotplot(kk2, showCategory = 10, title = "Enriched Pathways" , split=".sign") + 
+  facet_grid(.~.sign)
+
+```
 
 ## Acknowledgment
 
