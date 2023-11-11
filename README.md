@@ -84,7 +84,7 @@ dataNorm<-TCGAanalyze_Normalization(tabDF=data2,
                                     method="gcContent")
 
 
-#Revisamos que todo vaya bien con la normalizacion y metodo
+#We check that everything is going well with the normalization and method (using a boxplot).
 
 boxplot(data2[,1:50], outline=FALSE, main="Antes de la normalización", xaxt="n")
 boxplot(dataTMMnorm[,1:50], outline=FALSE, main="Después de la normalización", xaxt="n")
@@ -112,7 +112,7 @@ save(dataPrep, dataNorm, dataFilt, dataTMMnorm, file="Preprocesamiento.RData")
 
 **3.DEG**
 
-First, we need to verify the available metadata. then, we choose the Dead and Alive projects. 
+First, we need to verify the available metadata. Then, we choose the Dead and Alive projects. 
 
 ``` R
 
@@ -163,8 +163,11 @@ DEG <- filter(dataDEGs, gene_type=="protein_coding")
 
 #save the data frames
 
+#Save DEG genes
 write.table(dataDEGs, "Genes_Diferenciados_TCGA.csv",
             row.names=T)
+
+#Save DEG coding genes
 write.table(DEG, "Genes_Dif_ProteinCoding.csv",
             row.names=T)
 
@@ -187,7 +190,7 @@ with(DEG, plot(logFC, -log10(PValue), pch=20, main="Volcano plot", xlim=c(-7,7))
 
 #We select these values, but it is important to adjust these values according to your data and perform an analysis of the values #beforehand.
 
-# blue padj<0.1, red si log2FC>1 y padj<0.1)
+# blue padj<0.1, red if log2FC>1 y padj<0.1)
 with(subset(DEG, PValue<0.05 ), points(logFC, -log10(PValue), pch=20, col="blue"))
 with(subset(DEG, PValue<0.05 & abs(logFC)>2), 
      points(logFC, -log10(PValue), pch=20, col="red"))
@@ -341,8 +344,7 @@ Silva, Tiago C., et al. “TCGA Workflow: Analyze cancer genomics and epigenomic
 Mounir, Mohamed, et al. “New functionalities in the TCGAbiolinks package for the study and integration of cancer data from GDC and GTEx.” PLoS computational biology 15.3 (2019): e1006701. (https://doi.org/10.1371/journal.pcbi.1006701)
 Other useful links
 
-Carmona Pedo & Cano Carlos, Analisis bioinformatico para un problems de ómicas. Google Colaboratory. (2019). Google.com. https://colab.research.google.com/drive/1sgkBRHqzUOxUHh4j_li3daHWqyNjEDOk?usp=sharing#scrollTo=Oe0PL76cRV23
-
+Carmona Pedo & Cano Carlos, Analisis bioinformatico para un problems de ómicas. Google Colaboratory. (2019). Google.com. 
 ‌
 
 
