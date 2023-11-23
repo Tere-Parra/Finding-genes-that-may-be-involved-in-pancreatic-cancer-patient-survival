@@ -18,7 +18,7 @@ First, I introduced the project (ductal pancreatic cancer subtype) and downloade
 TCGA-bio links have their codes and structure. Here, I combined edgeR and limma to perform a DEG analysis.
 We downloaded the data with query.raw. 
 
-The function query.raw has different options as data.category, data.type, and worflow.type (counts data).  We choose "Transcriptome Profiling", but this project has different data.category such as: "Simple Nucleotide Variation", "mi RNA profile", and more. To consult the available data: ([https://portal.gdc.cancer.gov/projects/TCGA-PAAD]) . Data.Type is the quantification form. workflow.type has the available software counts data. 
+The function query.raw has different options as data.category, data.type, and worflow.type (counts data).  We chose "Transcriptome Profiling", but this project has different data.a category such as: "Simple Nucleotide Variation", "mi RNA profile", and more. To consult the available data: ([https://portal.gdc.cancer.gov/projects/TCGA-PAAD]) . Data.Type is the quantification form. workflow.type has the available software counts data. 
 
 
  ``` R
@@ -337,7 +337,7 @@ Tere Parra (2022).  GitHub. [https://github.com/Tere-Parra/Finding-genes-that-ma
 
 ## REFERENCES
 
-Colaprico, Antonio, et al. “TCGAbiolinks: an R/Bioconductor package for integrative analysis of TCGA data.” Nucleic acids research 44.8 (2015): e71-e71.
+Colaprico, Antonio, et al. “TCGAbiolinks: a R/Bioconductor package for integrative analysis of TCGA data.” Nucleic acids research 44.8 (2015): e71-e71.
 
 Silva, Tiago C., et al. “TCGA Workflow: Analyze cancer genomics and epigenomics data using Bioconductor packages.” F1000Research 5 (2016). (https://f1000research.com/articles/5-1542/v2)
 
